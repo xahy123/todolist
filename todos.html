@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <div class="page-top">
+    <div class="page-content">
+      <h2>任务计划列表</h2>
+    </div>
+  </div>
+  <div class="main" id="app">
+    <h3 class="big-title">添加任务：</h3>
+    <input placeholder="例如：吃饭睡觉打豆豆；    提示：+回车即可添加任务" class="task-input" type="text" @keyup.13="add" v-model="addInp"/>
+    <ul class="task-count">
+      <li>2个任务未完成</li>
+      <li class="action">
+        <a class="active" href="#">所有任务</a>
+        <a href="#">未完成的任务</a>
+        <a href="#">完成的任务</a>
+      </li>
+    </ul>
+    <h3 class="big-title">任务列表：</h3>
+    <div class="tasks">
+
+      <span class="no-task-tip">还没有添加任何任务</span>
+      <ul class="todo-list">
+        <!-- {{listItem}} -->
+        <li class="todo" v-for="(item,index) in listItem" :class="{completed:item.isCompleted,editing:item.isEditing}" @dblclick="dbl(item)">
+          <div class="view">
+            <input type="checkbox" class="toggle" v-model="item.isCompleted"><!-- 要实现钩和完成同时变，就要加双向绑定 -->
+            <label>{{item.title}}</label>
+            <button class="destroy" @click="del(index)"></button><!-- del(item)为了确认删除的是第几个 -->
+          </div>
+          <input type="text" class="edit" @keyup.13="edits(item)" v-model="edit">
+        </li>
+        <!-- <li class="todo">
+          <div class="view">
+            <input class="toggle" type="checkbox" />
+            <label>vue学习计划</label>
+            <button class="destroy"></button>
+          </div>
+          <input class="edit" type="text" />
+        </li>
+        <li class="todo completed">
+          <div class="view">
+            <input class="toggle" type="checkbox" checked="cheecked" />
+            <label>vue学习计划</label>
+            <button class="destroy"></button>
+          </div>
+          <input class="edit" type="text" />
+        </li>
+        <li class="todo ">editing
+          <div class="view">
+            <input class="toggle" type="checkbox" />
+            <label>vue学习计划</label>
+            <button class="destroy"></button>
+          </div>
+          <input class="edit" type="text" />
+        </li> -->
+      </ul>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script>
+    let list = [
+      {
+        title:"我想默写唐诗宋词",
+        isCompleted:false,
+        isEditing:false
+      },
+      {
+        title:"我想去旅行",
+        isCompleted:true,
+        isEditing:false
+      }
+    ]
+    var app = new Vue({
+      el:"#app",
+      data:{
+        addInp:"",//为了获取我在页面输入的内容,为了使其内容和我输入的同步，要双向绑定
+        listItem:list,
+        edit:""
+      },
+      methods:{
+        //添加列表
+        add:function(){//把上面获取的addinp添加到listItem
+          this.listItem.push({title:this.addInp,isCompleted:false,isEditing:false});
+          this.addInp="";
+        },
+        //删除
+        del:function(index){
+          //index是为了接受参数，参数是为了确定删除的是哪个
+          this.listItem.splice(index,1);
+        },
+        dbl:function(item){
+          item.isEditing = true;
+        },
+        edits:function(item){
+          this.listItem.splice(item,1);
+          this.listItem.push({title:this.edit,isCompleted:false,isEditing:false});
+          item.isEditing = false;
+          this.edit="";
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
